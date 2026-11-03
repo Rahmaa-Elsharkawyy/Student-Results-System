@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results Management System</title>
+</head>
+<body>
+
+    <h1>Student Results Management System</h1>
+    <p>Open the browser Console to view the results.</p>
+
+    <script>
+
+        // 1. Student Class
+        class Student {
+            constructor(id, name, grades, attendance) {
+                this.id = id;
+                this.name = name;
+                this.grades = grades;
+                this.attendance = attendance;
+            }
+
+            // 2. Calculate Average using reduce
+            calculateAverage() {
+                let total = this.grades.reduce((sum, grade) => sum + grade, 0);
+                return total / this.grades.length;
+            }
+
+            // 3. Determine Letter Grade
+            getGrade(average) {
+                if (average >= 90) {
+                    return "A";
+                } else if (average >= 80) {
+                    return "B";
+                } else if (average >= 70) {
+                    return "C";
+                } else if (average >= 60) {
+                    return "D";
+                } else if (average >= 50) {
+                    return "E";
+                } else {
+                    return "F";
+                }
+            }
+
+            // 4. Determine Final Result
+            getResult(average) {
+                if (average >= 50 && this.attendance >= 75) {
+                    return "ناجح";
+                } else {
+                    return "يحتاج مراجعة";
+                }
+            }
+        }
+
+        // 5. Main Students Array
+        let studentsList = [
+            new Student(101, "Ahmed", [85, 90, 80], 90),
+            new Student(102, "Sara", [45, 40, 50], 80),
+            new Student(103, "Mona", [70, 75, 80], 95),
+            new Student(104, "Omar", [40, 45, 48], 70)
+        ];
+
+        // 6. Print Report for All Students
+        console.log("===== Students Results Report =====");
+
+        studentsList.forEach(student => {
+            let average = student.calculateAverage();
+            let grade = student.getGrade(average);
+            let result = student.getResult(average);
+
+            console.log("Student Name:", student.name);
+            console.log("Average:", average.toFixed(2));
+            console.log("Grade:", grade);
+            console.log("Result:", result);
+            console.log("-----------------------------");
+        });
+
+        // 7. Compassion Committee (Filter)
+        let strugglingStudents = studentsList.filter(student => {
+            let average = student.calculateAverage();
+            return average >= 40 && average <= 49;
+        });
+
+        console.log("===== Struggling Students =====");
+        console.log(strugglingStudents);
+
+        // 8. Add 5 Bonus Marks using Map
+        let studentsAfterBonus = strugglingStudents.map(student => {
+            let oldAverage = student.calculateAverage();
+            let newAverage = oldAverage + 5;
+
+            return {
+                id: student.id,
+                name: student.name,
+                oldAverage: oldAverage,
+                newAverage: newAverage
+            };
+        });
+
+        console.log("===== Students After Bonus =====");
+        console.log(studentsAfterBonus);
+
+        // 9. Calculate Sum of New Averages using Reduce
+        let totalNewAverages = studentsAfterBonus.reduce((sum, student) => {
+            return sum + student.newAverage;
+        }, 0);
+
+        // 10. Calculate General Average with Protection
+        let compassionAverage = studentsAfterBonus.length > 0
+            ? totalNewAverages / studentsAfterBonus.length
+            : 0;
+
+        console.log("===== Compassion Committee Report =====");
+        console.log("Number of Struggling Students:", studentsAfterBonus.length);
+        console.log("Total Averages After Bonus:", totalNewAverages);
+        console.log("General Average After Bonus:", compassionAverage.toFixed(2));
+
+    </script>
+
+</body>
+</html>
